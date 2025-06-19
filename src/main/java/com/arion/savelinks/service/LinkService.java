@@ -3,14 +3,14 @@ package com.arion.savelinks.service;
 import com.arion.savelinks.DTO.LinkDTO;
 import com.arion.savelinks.DTO.UpdateLinkDTO;
 import com.arion.savelinks.Exception.LinkNotFoundException;
+import com.arion.savelinks.Exception.UsernameNotFoundException;
 import com.arion.savelinks.entity.Link;
 import com.arion.savelinks.entity.User;
 import com.arion.savelinks.repository.LinkRepository;
 import com.arion.savelinks.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
+ import org.springframework.stereotype.Service;
+ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -24,7 +24,7 @@ public class LinkService {
     public List<Link> getLink(String username) {
         Optional<User> byUsername = userDetailsRepository.findByUsername(username);
         if(!byUsername.isPresent()){
-            throw new RuntimeException("User not found with username"+username);
+            throw new UsernameNotFoundException("User not found with username"+username);
         }
         User existingUser=byUsername.get();
         return existingUser.getLinks();
@@ -35,7 +35,7 @@ public class LinkService {
     public void saveLink(LinkDTO dto, String username) {
         Optional<User> user = userDetailsRepository.findByUsername(username);
         if (!user.isPresent()) {
-            throw new RuntimeException("User not found with the username" + username);
+            throw new UsernameNotFoundException("User not found with the username" + username);
         }
         User existingUser = user.get();
         Link link=new Link();

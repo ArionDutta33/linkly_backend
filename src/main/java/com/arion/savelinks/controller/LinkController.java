@@ -4,6 +4,7 @@ import com.arion.savelinks.DTO.LinkDTO;
 import com.arion.savelinks.DTO.UpdateLinkDTO;
  import com.arion.savelinks.entity.Link;
 import com.arion.savelinks.service.LinkService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +57,7 @@ public class LinkController {
 
     //configured with dto
     @PostMapping("/link")
-    public ResponseEntity<?> addLink(@RequestBody LinkDTO link) {
+    public ResponseEntity<?> addLink(@Valid @RequestBody LinkDTO link) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated()) {
             throw new RuntimeException("User not authenticated");
