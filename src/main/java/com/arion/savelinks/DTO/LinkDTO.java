@@ -13,12 +13,13 @@ import lombok.NoArgsConstructor;
 public class LinkDTO {
     private Long id;
     @NotBlank(message = "Link title is required")
+    @Size(min = 3, max = 100, message = "Link title must be between 3 and 100 characters")
     private String link_title;
     @NotBlank(message = "Link is required")
     @Pattern(regexp = "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$", message = "Invalid URL format")
 
     private String link;
-
+    @Size(max = 150, message = "Description can't exceed 150 characters")
     private String description;
 
 

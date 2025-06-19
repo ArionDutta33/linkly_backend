@@ -2,6 +2,7 @@ package com.arion.savelinks.ExceptionHandler;
 
 import com.arion.savelinks.Error.ErrorEntity;
 import com.arion.savelinks.Exception.LinkNotFoundException;
+import com.arion.savelinks.Exception.UnauthorizedException;
 import com.arion.savelinks.Exception.UsernameNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,12 @@ public class GlobalExceptionHandler {
         ErrorEntity errorEntity = new ErrorEntity("Internal Server Error", ex.getMessage());
         return new ResponseEntity<>(errorEntity, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException unauthorizedException){
+        ErrorEntity errorEntity=new ErrorEntity(unauthorizedException.getMessage(),"You are not allowed to access this");
+        return new ResponseEntity<>(errorEntity,HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex) {
         List<String> errors = ex.getBindingResult()

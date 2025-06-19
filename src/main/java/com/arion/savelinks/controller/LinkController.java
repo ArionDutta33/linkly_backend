@@ -2,7 +2,9 @@ package com.arion.savelinks.controller;
 
 import com.arion.savelinks.DTO.LinkDTO;
 import com.arion.savelinks.DTO.UpdateLinkDTO;
- import com.arion.savelinks.entity.Link;
+import com.arion.savelinks.DTO.UpdateResponseDTO;
+import com.arion.savelinks.Exception.UnauthorizedException;
+import com.arion.savelinks.entity.Link;
 import com.arion.savelinks.service.LinkService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +62,7 @@ public class LinkController {
     public ResponseEntity<?> addLink(@Valid @RequestBody LinkDTO link) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated()) {
-            throw new RuntimeException("User not authenticated");
+            throw new UnauthorizedException("User not authenticated");
         }
         String username = authentication.getName();
 
@@ -70,10 +72,17 @@ public class LinkController {
     }
     //already uses dto
     @PutMapping("/link/{id}")
-    public ResponseEntity<?> updateLink(@PathVariable String id, @RequestBody UpdateLinkDTO link) {
+    public ResponseEntity<?> updateLink(@PathVariable String id,@Valid @RequestBody UpdateLinkDTO link) {
         Long linkId = Long.parseLong(id);
-        linkService.updateLink(linkId, link);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Link updatedLink = linkService.updateLink(linkId, link);
+        UpdateResponseDTO updateResponseDTO=new UpdateResponseDTO(
+                updatedLink.getId(),
+                updatedLink.getLink_title(),
+
+                updatedLink.getLink(),
+                updatedLink.getDescription()
+        );
+        return new ResponseEntity<>(updateResponseDTO,HttpStatus.OK);
     }
 
     @DeleteMapping("/link/{id}")

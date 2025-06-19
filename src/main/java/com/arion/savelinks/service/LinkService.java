@@ -51,7 +51,7 @@ public class LinkService {
     }
 
 
-    public void updateLink(Long id, UpdateLinkDTO linkDTO) {
+    public Link updateLink(Long id, UpdateLinkDTO linkDTO) {
         Optional<Link> linkById = linkRepository.findById(id);
         if (linkById.isPresent()) {
             Link existingLink = linkById.get();
@@ -68,7 +68,7 @@ public class LinkService {
                 existingLink.setDescription(linkDTO.getDescription());
             }
 
-            linkRepository.save(existingLink);
+            return linkRepository.save(existingLink);
         } else {
             throw new LinkNotFoundException("Link not found");
         }
